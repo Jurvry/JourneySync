@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JourneySync - Your Sound Journey</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --light-color: #e0f2fe;
+            --success-color: #10b981;
+            --text-color: #1f2937;
+            --bg-gradient: linear-gradient(145deg, #e0f2fe, #bfdbfe);
+            --glow: 0 0 15px rgba(37, 99, 235, 0.7);
+        }
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-family: 'Rubik', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        .container { max-width: 1400px; padding: 20px; }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--glow);
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 10;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #fff;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--glow);
+        }
+        .content-type-btn {
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .content-type-btn.active {
+            border-color: var(--accent-color);
+            background: #dbeafe;
+            box-shadow: var(--glow);
+        }
+        .player-container {
+            border-radius: 10px 10px 0 0;
+            height: 200px;
+            background: #000;
+        }
+        .audio-player {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 10px 10px 0 0;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: var(--glow);
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+        .waze-btn.loading {
+            position: relative;
+            overflow: hidden;
+        }
+        .waze-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .dark-mode-toggle { position: absolute; top: 15px; left: 15px; }
+        .dark-mode { background: linear-gradient(145deg, #1e3a8a, #0f172a); color: #e5e7eb; }
+        .dark-mode .card { background: #1f2937; }
+        .dark-mode .header { background: rgba(31, 41, 55, 0.95); }
+        .toast-container { position: fixed; top: 15px; right: 15px; z-index: 1100; }
+        .rtl { direction: rtl; text-align: right; }
+
+        /* About Section Styles */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 100px 40px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 15px 40px rgba(37, 99, 235, 0.3); }
+            50% { box-shadow: 0 15px 40px rgba(37, 99, 235, 0.6); }
+            100% { box-shadow: 0 15px 40px rgba(37, 99, 235, 0.3); }
+        }
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(45deg);
+            animation: shimmer 6s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+        .about-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.4);
+        }
+        .about-content {
+            background: #fff;
+            border-radius: 20px;
+            padding: 50px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .investor-btn {
+            background: var(--success-color);
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .investor-btn:hover {
+            background: #0a8f66;
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        .feature-card {
+            background: var(--light-color);
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--glow);
+        }
+        .dark-mode .about-hero { background: linear-gradient(135deg, #1e40af, #2563eb); }
+        .dark-mode .about-content { background: #1f2937; }
+        .dark-mode .feature-card { background: #374151; }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <div class="dark-mode-toggle">
+            <button class="btn btn-sm btn-outline-secondary" id="darkModeToggle"><i class="fas fa-moon"></i></button>
+        </div>
+        <div class="toast-container">
+            <div class="toast bg-success text-white" id="successToast">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage"></div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        </div>
+        <header class="header text-center" id="header">
+            <h1 class="display-4">JourneySync</h1>
+            <p class="lead" id="headerSubtitle">Your Sound Journey Starts Here</p>
+            <select class="language-select mt-2" id="languageSelect">
+                <option value="en">English</option>
+                <option value="he">עברית</option>
+            </select>
+            <nav class="mt-3">
+                <button class="btn btn-outline-primary me-2" id="homeBtn">Home</button>
+                <button class="btn btn-primary" id="aboutBtn">About</button>
+            </nav>
+        </header>
+
+        <!-- Home Section -->
+        <div id="homeSection" class="section active">
+            <div class="card p-4 mb-4">
+                <form id="journeyForm">
+                    <div class="mb-3">
+                        <label for="duration" class="form-label fs-5" id="durationLabel">Travel Duration (minutes)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                            <input type="number" class="form-control" id="duration" placeholder="Enter or use Waze" min="1" max="220" required>
+                            <button type="button" class="btn waze-btn" id="wazeBtn"><i class="fab fa-waze"></i> Waze</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fs-5" id="contentLabel">Choose Content</label>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button type="button" class="content-type-btn flex-grow-1 active" data-type="music"><i class="fas fa-music"></i><div id="musicBtn">Music</div></button>
+                            <button type="button" class="content-type-btn flex-grow-1" data-type="lectures"><i class="fas fa-chalkboard-teacher"></i><div id="lecturesBtn">Lectures</div></button>
+                            <button type="button" class="content-type-btn flex-grow-1" data-type="podcasts"><i class="fas fa-podcast"></i><div id="podcastsBtn">Podcasts</div></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preference" class="form-label fs-5" id="preferenceLabel">Preference</label>
+                        <select class="form-select preference-select" id="preference">
+                            <option value="general">General</option>
+                            <option value="motivation">Motivation</option>
+                            <option value="relaxing">Relaxing</option>
+                            <option value="comedy">Comedy</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sourceSelect" class="form-label fs-5">Content Source</label>
+                        <select class="form-select preference-select" id="sourceSelect">
+                            <option value="youtube">YouTube</option>
+                            <option value="fma">Free Music Archive</option>
+                            <option value="jamendo">Jamendo</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2" id="submitBtn">
+                        <span class="spinner-border spinner-border-sm me-2 spinner" style="display: none;"></span>
+                        <span id="submitText">Sync My Journey</span>
+                    </button>
+                </form>
+            </div>
+            <div class="card p-4" id="results" style="display: none;">
+                <div class="d-flex justify-content-between mb-3">
+                    <h2 class="fs-3" id="resultsTitle">Your Content</h2>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" id="savePlaylistBtn"><i class="fas fa-save"></i> <span id="savePlaylistText">Save</span></button>
+                        <button class="btn btn-sm btn-outline-primary" id="shareBtn"><i class="fas fa-share-alt"></i> <span id="shareText">Share</span></button>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-md-3 g-3" id="resultsContainer"></div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div id="aboutSection" class="section">
+            <section class="about-hero" id="aboutHero">
+                <h1 id="aboutTitle">Who We Are</h1>
+                <p class="lead mt-3" id="aboutSubtitle">JourneySync - Where Every Trip Becomes an Epic Adventure</p>
+            </section>
+            <section class="about-content" id="aboutContent">
+                <h2 class="text-center mb-4" id="aboutVisionTitle">Our Vision</h2>
+                <p class="lead text-center" id="aboutVisionText">
+                    We are JourneySync, a trailblazing startup that fuses cutting-edge technology with a passion for transforming your travel experience. 
+                    Our mission? To turn every minute on the road into a personalized adventure—whether it’s learning something new, igniting your motivation, or unwinding with the perfect soundtrack.
+                </p>
+                <div class="row mt-5">
+                    <div class="col-md-4">
+                        <div class="feature-card text-center" id="feature1">
+                            <i class="fas fa-rocket fa-3x mb-3 text-primary"></i>
+                            <h4 id="feature1Title">Groundbreaking Innovation</h4>
+                            <p id="feature1Text">Smart algorithms that sync content to your exact travel time with flawless precision.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center" id="feature2">
+                            <i class="fas fa-headphones fa-3x mb-3 text-primary"></i>
+                            <h4 id="feature2Title">A Universe of Sound</h4>
+                            <p id="feature2Text">Free access to music, lectures, and podcasts from top sources like YouTube, FMA, and Jamendo.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card text-center" id="feature3">
+                            <i class="fas fa-star fa-3x mb-3 text-primary"></i>
+                            <h4 id="feature3Title">Unmatched Experience</h4>
+                            <p id="feature3Text">Stunning design and multilingual support that make every user feel extraordinary.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-5 text-center" id="aboutTeamText">
+                    Our team is a rare blend of tech wizards, sound artists, and future-thinkers, all driven to make JourneySync the next big revolution in digital content. 
+                    We’re not just an app—we’re your ticket to turning every journey into a masterpiece.
+                </p>
+                <div class="text-center mt-5">
+                    <a href="mailto:yjurvey61@gmail.com" class="btn investor-btn" id="investorBtn">
+                        <i class="fas fa-envelope me-2"></i> <span id="investorBtnText">Investors: Join the Journey</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const contentDatabase = {
+            youtube: [
+                { title: "Lady Gaga, Bruno Mars - Die With A Smile (2024)", id: "IiXUgXd3Qe0", duration: 4, type: "music", preference: "general" }, // From your playlist link
+                { title: "The Weeknd - Dancing In The Flames (2024)", id: "R2SY6fZMult", duration: 4, type: "music", preference: "motivation" },
+                { title: "Sabrina Carpenter - Taste (2024)", id: "UzSktNOYDFg", duration: 3, type: "music", preference: "general" },
+                { title: "Billie Eilish - BIRDS OF A FEATHER (2024)", id: "xKKNxNHV6uU", duration: 4, type: "music", preference: "relaxing" },
+                { title: "Post Malone - Yours (2024)", id: "kWBNhJq5I_8", duration: 3, type: "music", preference: "general" },
+                { title: "Dua Lipa - Training Season (2024)", id: "u1cV5xGMeMM", duration: 4, type: "music", preference: "motivation" },
+                { title: "Chappell Roan - Good Luck, Babe! (2024)", id: "o6qB3OfekUc", duration: 3, type: "music", preference: "general" },
+                { title: "TED: The Power of Vulnerability - Brené Brown", id: "iCvmsMzlF7o", duration: 20, type: "lectures", preference: "motivation" },
+                { title: "TEDx: How to Stop Screwing Yourself Over - Mel Robbins", id: "LCHPSo79rB4", duration: 21, type: "lectures", preference: "motivation" },
+                { title: "TED: Your Body Language May Shape Who You Are - Amy Cuddy", id: "Ks-_Mh1QhMc", duration: 21, type: "lectures", preference: "motivation" },
+                { title: "Joe Rogan Experience #2110 - Tony Hinchcliffe (2024)", id: "QCr_6v8DAeQ", duration: 30, type: "podcasts", preference: "comedy" },
+                { title: "The Diary Of A CEO - Steven Bartlett (2024 Clip)", id: "pD7AzaSNYzA", duration: 15, type: "podcasts", preference: "general" }
+            ],
+            fma: [
+                { title: "Ketsa - Inner Peace (2023)", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Inner_Peace/Ketsa_-_02_-_Inner_Peace.mp3", duration: 4, type: "music", preference: "relaxing" },
+                { title: "Scott Holmes - Inspirational Outlook", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Scott_Holmes/Inspirational_Background_Music/Scott_Holmes_-_01_-_Inspirational_Outlook.mp3", duration: 5, type: "music", preference: "motivation" },
+                { title: "Jahzzar - Siesta (Upbeat Pop)", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Jahzzar/Travellers_Guide/Jahzzar_-_01_-_Siesta.mp3", duration: 3, type: "music", preference: "general" },
+                { title: "Podington Bear - Funny Quirk", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Podington_Bear/Funny/Podington_Bear_-_03_-_Quirky.mp3", duration: 2, type: "music", preference: "comedy" }
+            ],
+            jamendo: [
+                { title: "Aerohead - Energetic Rock (2023)", id: "https://prod-1.storage.jamendo.com/?trackid=1896148&format=mp31", duration: 3, type: "music", preference: "motivation" },
+                { title: "Lukhash - Chillwave Dreams (2023)", id: "https://prod-1.storage.jamendo.com/?trackid=1872345&format=mp31", duration: 4, type: "music", preference: "relaxing" },
+                { title: "Fresh Body Shop - Funny Podcast Intro", id: "https://prod-1.storage.jamendo.com/?trackid=1845123&format=mp31", duration: 2, type: "music", preference: "comedy" },
+                { title: "Rolemusic - Galactic Adventure", id: "https://prod-1.storage.jamendo.com/?trackid=1867234&format=mp31", duration: 5, type: "music", preference: "general" }
+            ]
+        };
+
+        let players = [];
+        let selectedContentType = 'music';
+        let selectedSource = 'youtube';
+        let currentLanguage = 'en';
+
+        const form = document.getElementById('journeyForm');
+        const durationInput = document.getElementById('duration');
+        const contentTypeButtons = document.querySelectorAll('.content-type-btn');
+        const preferenceSelect = document.getElementById('preference');
+        const sourceSelect = document.getElementById('sourceSelect');
+        const submitBtn = document.getElementById('submitBtn');
+        const results = document.getElementById('results');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const languageSelect = document.getElementById('languageSelect');
+        const wazeBtn = document.getElementById('wazeBtn');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const toast = new bootstrap.Toast(document.getElementById('successToast'));
+        const toastMessage = document.getElementById('toastMessage');
+        const homeSection = document.getElementById('homeSection');
+        const aboutSection = document.getElementById('aboutSection');
+        const mainContainer = document.getElementById('mainContainer');
+        const header = document.getElementById('header');
+        const homeBtn = document.getElementById('homeBtn');
+        const aboutBtn = document.getElementById('aboutBtn');
+
+        const translations = {
+            en: {
+                headerSubtitle: 'Your Sound Journey Starts Here',
+                durationLabel: 'Travel Duration (minutes)',
+                contentLabel: 'Choose Content',
+                musicBtn: 'Music',
+                lecturesBtn: 'Lectures',
+                podcastsBtn: 'Podcasts',
+                preferenceLabel: 'Preference',
+                submitText: 'Sync My Journey',
+                resultsTitle: 'Your Content',
+                savePlaylistText: 'Save',
+                shareText: 'Share',
+                wazeBtnText: 'Waze',
+                homeBtn: 'Home',
+                aboutBtn: 'About',
+                aboutTitle: 'Who We Are',
+                aboutSubtitle: 'JourneySync - Where Every Trip Becomes an Epic Adventure',
+                aboutVisionTitle: 'Our Vision',
+                aboutVisionText: 'We are JourneySync, a trailblazing startup that fuses cutting-edge technology with a passion for transforming your travel experience. Our mission? To turn every minute on the road into a personalized adventure—whether it’s learning something new, igniting your motivation, or unwinding with the perfect soundtrack.',
+                feature1Title: 'Groundbreaking Innovation',
+                feature1Text: 'Smart algorithms that sync content to your exact travel time with flawless precision.',
+                feature2Title: 'A Universe of Sound',
+                feature2Text: 'Free access to music, lectures, and podcasts from top sources like YouTube, FMA, and Jamendo.',
+                feature3Title: 'Unmatched Experience',
+                feature3Text: 'Stunning design and multilingual support that make every user feel extraordinary.',
+                aboutTeamText: 'Our team is a rare blend of tech wizards, sound artists, and future-thinkers, all driven to make JourneySync the next big revolution in digital content. We’re not just an app—we’re your ticket to turning every journey into a masterpiece.',
+                investorBtnText: 'Investors: Join the Journey'
+            },
+            he: {
+                headerSubtitle: 'מסע הקול שלך מתחיל כאן',
+                durationLabel: 'משך הנסיעה (בדקות)',
+                contentLabel: 'בחר תוכן',
+                musicBtn: 'מוזיקה',
+                lecturesBtn: 'הרצאות',
+                podcastsBtn: 'פודקאסטים',
+                preferenceLabel: 'העדפה',
+                submitText: 'סנכרן נסיעה',
+                resultsTitle: 'התוכן שלך',
+                savePlaylistText: 'שמור',
+                shareText: 'שתף',
+                wazeBtnText: 'Waze',
+                homeBtn: 'דף הבית',
+                aboutBtn: 'אודות',
+                aboutTitle: 'מי אנחנו',
+                aboutSubtitle: 'JourneySync - המקום שבו כל נסיעה הופכת למסע יוצא דופן',
+                aboutVisionTitle: 'החזון שלנו',
+                aboutVisionText: 'אנחנו JourneySync, סטארט-אפ פורץ דרך שמשלב טכנולוגיה חדשנית עם תשוקה אמיתית לשדרג את חוויית הנסיעה שלך. המטרה שלנו? להפוך כל דקה בדרך להרפתקה מותאמת אישית - בין אם זה ללמוד משהו חדש, להצית את המוטיבציה שלך, או להירגע עם הפסקול המושלם.',
+                feature1Title: 'חדשנות עוצרת נשימה',
+                feature1Text: 'אלגוריתמים חכמים שמסנכרנים תוכן לזמן הנסיעה המדויק שלך בדיוק מושלם.',
+                feature2Title: 'עולם של צלילים',
+                feature2Text: 'גישה חופשית למוזיקה, הרצאות ופודקאסטים ממקורות מובילים כמו YouTube, FMA ו-Jamendo.',
+                feature3Title: 'חוויה יוצאת דופן',
+                feature3Text: 'עיצוב מרהיב ותמיכה רב-לשונית שגורמים לכל משתמש להרגיש מיוחד.',
+                aboutTeamText: 'הצוות שלנו הוא שילוב נדיר של גאוני טכנולוגיה, אמני סאונד וחולמי עתיד, כולם מחויבים להפוך את JourneySync למהפכה הבאה בעולם התוכן הדיגיטלי. אנחנו לא סתם אפליקציה - אנחנו הכרטיס שלך להפוך כל נסיעה ליצירת מופת.',
+                investorBtnText: 'למשקיעים: הצטרפו למסע'
+            }
+        };
+
+        contentTypeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                contentTypeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedContentType = btn.dataset.type;
+            });
+        });
+
+        sourceSelect.addEventListener('change', (e) => {
+            selectedSource = e.target.value;
+        });
+
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            updateLanguage();
+        });
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        wazeBtn.addEventListener('click', () => {
+            wazeBtn.classList.add('loading');
+            wazeBtn.disabled = true;
+            setTimeout(() => {
+                durationInput.value = Math.floor(Math.random() * 60) + 10;
+                wazeBtn.classList.remove('loading');
+                wazeBtn.disabled = false;
+                showToast(currentLanguage === 'he' ? 'משך הנסיעה נטען מ-Waze (בהתקדמות)' : 'Travel duration loaded from Waze (in progress)');
+            }, 2000);
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitBtn.classList.add('loading');
+            setTimeout(() => {
+                generatePlaylist();
+                submitBtn.classList.remove('loading');
+            }, 1000);
+        });
+
+        document.getElementById('savePlaylistBtn').addEventListener('click', () => {
+            showToast(currentLanguage === 'he' ? 'הפלייליסט נשמר בהצלחה' : 'Playlist saved successfully');
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href);
+            showToast(currentLanguage === 'he' ? 'קישור שותף ללוח' : 'Link copied to clipboard');
+        });
+
+        homeBtn.addEventListener('click', () => {
+            homeSection.classList.add('active');
+            aboutSection.classList.remove('active');
+            homeBtn.classList.add('btn-primary');
+            homeBtn.classList.remove('btn-outline-primary');
+            aboutBtn.classList.remove('btn-primary');
+            aboutBtn.classList.add('btn-outline-primary');
+        });
+
+        aboutBtn.addEventListener('click', () => {
+            aboutSection.classList.add('active');
+            homeSection.classList.remove('active');
+            aboutBtn.classList.add('btn-primary');
+            aboutBtn.classList.remove('btn-outline-primary');
+            homeBtn.classList.remove('btn-primary');
+            homeBtn.classList.add('btn-outline-primary');
+        });
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            document.getElementById('headerSubtitle').textContent = t.headerSubtitle;
+            document.getElementById('durationLabel').textContent = t.durationLabel;
+            document.getElementById('contentLabel').textContent = t.contentLabel;
+            document.getElementById('musicBtn').textContent = t.musicBtn;
+            document.getElementById('lecturesBtn').textContent = t.lecturesBtn;
+            document.getElementById('podcastsBtn').textContent = t.podcastsBtn;
+            document.getElementById('preferenceLabel').textContent = t.preferenceLabel;
+            document.getElementById('submitText').textContent = t.submitText;
+            document.getElementById('resultsTitle').textContent = t.resultsTitle;
+            document.getElementById('savePlaylistText').textContent = t.savePlaylistText;
+            document.getElementById('shareText').textContent = t.shareText;
+            homeBtn.textContent = t.homeBtn;
+            aboutBtn.textContent = t.aboutBtn;
+
+            // Update About Section
+            document.getElementById('aboutTitle').textContent = t.aboutTitle;
+            document.getElementById('aboutSubtitle').textContent = t.aboutSubtitle;
+            document.getElementById('aboutVisionTitle').textContent = t.aboutVisionTitle;
+            document.getElementById('aboutVisionText').textContent = t.aboutVisionText;
+            document.getElementById('feature1Title').textContent = t.feature1Title;
+            document.getElementById('feature1Text').textContent = t.feature1Text;
+            document.getElementById('feature2Title').textContent = t.feature2Title;
+            document.getElementById('feature2Text').textContent = t.feature2Text;
+            document.getElementById('feature3Title').textContent = t.feature3Title;
+            document.getElementById('feature3Text').textContent = t.feature3Text;
+            document.getElementById('aboutTeamText').textContent = t.aboutTeamText;
+            document.getElementById('investorBtnText').textContent = t.investorBtnText;
+
+            // Apply RTL for Hebrew
+            if (currentLanguage === 'he') {
+                mainContainer.classList.add('rtl');
+                header.classList.add('rtl');
+                homeSection.classList.add('rtl');
+                aboutSection.classList.add('rtl');
+                resultsContainer.classList.add('rtl');
+            } else {
+                mainContainer.classList.remove('rtl');
+                header.classList.remove('rtl');
+                homeSection.classList.remove('rtl');
+                aboutSection.classList.remove('rtl');
+                resultsContainer.classList.remove('rtl');
+            }
+        }
+
+        function generatePlaylist() {
+            const duration = parseInt(durationInput.value);
+            const preference = preferenceSelect.value;
+            const content = contentDatabase[selectedSource].filter(v => v.type === selectedContentType && (preference === 'general' || v.preference === preference));
+            const selectedContent = selectExactDuration(content, duration);
+            displayResults(selectedContent);
+        }
+
+        function selectExactDuration(content, target) {
+            let total = 0;
+            const result = [];
+            const shuffled = [...content].sort(() => 0.5 - Math.random());
+            for (const item of shuffled) {
+                if (total < target) {
+                    result.push(item);
+                    total += item.duration;
+                }
+                if (total >= target) break;
+            }
+            while (total > target && result.length > 0) {
+                total -= result.pop().duration;
+            }
+            return result;
+        }
+
+        function displayResults(content) {
+            resultsContainer.innerHTML = '';
+            players.forEach(player => player.destroy()); // Clean up previous players
+            players = [];
+            content.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'col';
+                let playerHTML = '';
+                if (selectedSource === 'youtube') {
+                    playerHTML = `<div class="player-container" id="player-${index}"></div>`;
+                } else {
+                    playerHTML = `<audio class="audio-player" controls><source src="${item.id}" type="audio/mpeg"></audio>`;
+                }
+                card.innerHTML = `
+                    <div class="card result-card">
+                        ${playerHTML}
+                        <div class="card-body">
+                            <h5 class="card-title">${item.title}</h5>
+                            <span class="badge bg-primary">${item.duration} ${currentLanguage === 'he' ? 'דקות' : 'min'}</span>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.appendChild(card);
+                if (selectedSource === 'youtube') {
+                    const player = new YT.Player(`player-${index}`, {
+                        height: '200',
+                        width: '100%',
+                        videoId: item.id,
+                        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'showinfo': 0 },
+                        events: {
+                            'onError': (e) => console.log(`Error with video ${item.id}: ${e.data}`)
+                        }
+                    });
+                    players.push(player);
+                }
+            });
+            results.style.display = 'block';
+        }
+
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.show();
+        }
+
+        updateLanguage();
+    </script>
+</body>
+</html>
