@@ -69,12 +69,6 @@
             height: 200px;
             background: #000;
         }
-        .audio-player {
-            width: 100%;
-            height: 200px;
-            border: none;
-            border-radius: 10px 10px 0 0;
-        }
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
@@ -238,14 +232,6 @@
                             <option value="comedy">Comedy</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="sourceSelect" class="form-label fs-5">Content Source</label>
-                        <select class="form-select preference-select" id="sourceSelect">
-                            <option value="youtube">YouTube</option>
-                            <option value="fma">Free Music Archive</option>
-                            <option value="jamendo">Jamendo</option>
-                        </select>
-                    </div>
                     <button type="submit" class="btn btn-primary w-100 py-2" id="submitBtn">
                         <span class="spinner-border spinner-border-sm me-2 spinner" style="display: none;"></span>
                         <span id="submitText">Sync My Journey</span>
@@ -288,7 +274,7 @@
                         <div class="feature-card text-center" id="feature2">
                             <i class="fas fa-headphones fa-3x mb-3 text-primary"></i>
                             <h4 id="feature2Title">A Universe of Sound</h4>
-                            <p id="feature2Text">Free access to music, lectures, and podcasts from top sources like YouTube, FMA, and Jamendo.</p>
+                            <p id="feature2Text">Free access to music, lectures, and podcasts from top sources like YouTube.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -316,45 +302,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        const contentDatabase = {
-            youtube: [
-                { title: "Lady Gaga, Bruno Mars - Die With A Smile (2024)", id: "IiXUgXd3Qe0", duration: 4, type: "music", preference: "general" }, // From your playlist link
-                { title: "The Weeknd - Dancing In The Flames (2024)", id: "R2SY6fZMult", duration: 4, type: "music", preference: "motivation" },
-                { title: "Sabrina Carpenter - Taste (2024)", id: "UzSktNOYDFg", duration: 3, type: "music", preference: "general" },
-                { title: "Billie Eilish - BIRDS OF A FEATHER (2024)", id: "xKKNxNHV6uU", duration: 4, type: "music", preference: "relaxing" },
-                { title: "Post Malone - Yours (2024)", id: "kWBNhJq5I_8", duration: 3, type: "music", preference: "general" },
-                { title: "Dua Lipa - Training Season (2024)", id: "u1cV5xGMeMM", duration: 4, type: "music", preference: "motivation" },
-                { title: "Chappell Roan - Good Luck, Babe! (2024)", id: "o6qB3OfekUc", duration: 3, type: "music", preference: "general" },
-                { title: "TED: The Power of Vulnerability - Brené Brown", id: "iCvmsMzlF7o", duration: 20, type: "lectures", preference: "motivation" },
-                { title: "TEDx: How to Stop Screwing Yourself Over - Mel Robbins", id: "LCHPSo79rB4", duration: 21, type: "lectures", preference: "motivation" },
-                { title: "TED: Your Body Language May Shape Who You Are - Amy Cuddy", id: "Ks-_Mh1QhMc", duration: 21, type: "lectures", preference: "motivation" },
-                { title: "Joe Rogan Experience #2110 - Tony Hinchcliffe (2024)", id: "QCr_6v8DAeQ", duration: 30, type: "podcasts", preference: "comedy" },
-                { title: "The Diary Of A CEO - Steven Bartlett (2024 Clip)", id: "pD7AzaSNYzA", duration: 15, type: "podcasts", preference: "general" }
-            ],
-            fma: [
-                { title: "Ketsa - Inner Peace (2023)", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Inner_Peace/Ketsa_-_02_-_Inner_Peace.mp3", duration: 4, type: "music", preference: "relaxing" },
-                { title: "Scott Holmes - Inspirational Outlook", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Scott_Holmes/Inspirational_Background_Music/Scott_Holmes_-_01_-_Inspirational_Outlook.mp3", duration: 5, type: "music", preference: "motivation" },
-                { title: "Jahzzar - Siesta (Upbeat Pop)", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Jahzzar/Travellers_Guide/Jahzzar_-_01_-_Siesta.mp3", duration: 3, type: "music", preference: "general" },
-                { title: "Podington Bear - Funny Quirk", id: "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Podington_Bear/Funny/Podington_Bear_-_03_-_Quirky.mp3", duration: 2, type: "music", preference: "comedy" }
-            ],
-            jamendo: [
-                { title: "Aerohead - Energetic Rock (2023)", id: "https://prod-1.storage.jamendo.com/?trackid=1896148&format=mp31", duration: 3, type: "music", preference: "motivation" },
-                { title: "Lukhash - Chillwave Dreams (2023)", id: "https://prod-1.storage.jamendo.com/?trackid=1872345&format=mp31", duration: 4, type: "music", preference: "relaxing" },
-                { title: "Fresh Body Shop - Funny Podcast Intro", id: "https://prod-1.storage.jamendo.com/?trackid=1845123&format=mp31", duration: 2, type: "music", preference: "comedy" },
-                { title: "Rolemusic - Galactic Adventure", id: "https://prod-1.storage.jamendo.com/?trackid=1867234&format=mp31", duration: 5, type: "music", preference: "general" }
-            ]
-        };
+        const contentDatabase = [
+            { title: "Lady Gaga, Bruno Mars - Die With A Smile", id: "IiXUgXd3Qe0", duration: 4, type: "music", preference: "general" },
+            { title: "The Weeknd - Dancing In The Flames", id: "R2SY6fZMult", duration: 4, type: "music", preference: "motivation" },
+            { title: "Post Malone - Yours", id: "kWBNhJq5I_8", duration: 3, type: "music", preference: "general" },
+            { title: "TED: The Power of Vulnerability - Brené Brown", id: "iCvmsMzlF7o", duration: 20, type: "lectures", preference: "motivation" },
+            { title: "TEDx: How to Stop Screwing Yourself Over - Mel Robbins", id: "LCHPSo79rB4", duration: 21, type: "lectures", preference: "motivation" },
+            { title: "TED: Your Body Language May Shape Who You Are - Amy Cuddy", id: "Ks-_Mh1QhMc", duration: 21, type: "lectures", preference: "motivation" },
+            { title: "Joe Rogan Experience #2110 - Tony Hinchcliffe", id: "QCr_6v8DAeQ", duration: 30, type: "podcasts", preference: "comedy" },
+            { title: "The Diary Of A CEO - Steven Bartlett (Clip)", id: "pD7AzaSNYzA", duration: 15, type: "podcasts", preference: "general" },
+            { title: "Benson Boone - Beautiful Things", id: "Oa_RSwwpPaA", duration: 3, type: "music", preference: "motivation" },
+            { title: "Camila Cabello: Tiny Desk (Home) Concert", id: "F7wIRxQEetc", duration: 19, type: "music", preference: "general" },
+            { title: "Seu Jorge: NPR Music Tiny Desk Concert", id: "2Ws_5-hiqao", duration: 15, type: "music", preference: "relaxing" },
+            { title: "Reggae Versions / Santa Monica LiveSession", id: "AzsuoMeWXjg", duration: 5, type: "music", preference: "relaxing" },
+            { title: "Bruno Mars, Anderson .Paak, Silk Sonic - Leave the Door Open", id: "adLGHcj_fmA", duration: 4, type: "music", preference: "relaxing" },
+            { title: "The Weeknd - Blinding Lights (10 Minutes Version)", id: "o3noebwFgro", duration: 10, type: "music", preference: "motivation" },
+            { title: "|speed up songs|", id: "_lvf33SLJ3U", duration: 15, type: "music", preference: "motivation" },
+            { title: "20 Minute Instant CALMING MUSIC, Relaxing Music, Calm Music", id: "qsEBaIMCKl4", duration: 20, type: "music", preference: "relaxing" }
+        ];
 
         let players = [];
         let selectedContentType = 'music';
-        let selectedSource = 'youtube';
         let currentLanguage = 'en';
 
         const form = document.getElementById('journeyForm');
         const durationInput = document.getElementById('duration');
         const contentTypeButtons = document.querySelectorAll('.content-type-btn');
         const preferenceSelect = document.getElementById('preference');
-        const sourceSelect = document.getElementById('sourceSelect');
         const submitBtn = document.getElementById('submitBtn');
         const results = document.getElementById('results');
         const resultsContainer = document.getElementById('resultsContainer');
@@ -383,7 +357,6 @@
                 resultsTitle: 'Your Content',
                 savePlaylistText: 'Save',
                 shareText: 'Share',
-                wazeBtnText: 'Waze',
                 homeBtn: 'Home',
                 aboutBtn: 'About',
                 aboutTitle: 'Who We Are',
@@ -393,7 +366,7 @@
                 feature1Title: 'Groundbreaking Innovation',
                 feature1Text: 'Smart algorithms that sync content to your exact travel time with flawless precision.',
                 feature2Title: 'A Universe of Sound',
-                feature2Text: 'Free access to music, lectures, and podcasts from top sources like YouTube, FMA, and Jamendo.',
+                feature2Text: 'Free access to music, lectures, and podcasts from top sources like YouTube.',
                 feature3Title: 'Unmatched Experience',
                 feature3Text: 'Stunning design and multilingual support that make every user feel extraordinary.',
                 aboutTeamText: 'Our team is a rare blend of tech wizards, sound artists, and future-thinkers, all driven to make JourneySync the next big revolution in digital content. We’re not just an app—we’re your ticket to turning every journey into a masterpiece.',
@@ -411,7 +384,6 @@
                 resultsTitle: 'התוכן שלך',
                 savePlaylistText: 'שמור',
                 shareText: 'שתף',
-                wazeBtnText: 'Waze',
                 homeBtn: 'דף הבית',
                 aboutBtn: 'אודות',
                 aboutTitle: 'מי אנחנו',
@@ -421,7 +393,7 @@
                 feature1Title: 'חדשנות עוצרת נשימה',
                 feature1Text: 'אלגוריתמים חכמים שמסנכרנים תוכן לזמן הנסיעה המדויק שלך בדיוק מושלם.',
                 feature2Title: 'עולם של צלילים',
-                feature2Text: 'גישה חופשית למוזיקה, הרצאות ופודקאסטים ממקורות מובילים כמו YouTube, FMA ו-Jamendo.',
+                feature2Text: 'גישה חופשית למוזיקה, הרצאות ופודקאסטים ממקורות מובילים כמו YouTube.',
                 feature3Title: 'חוויה יוצאת דופן',
                 feature3Text: 'עיצוב מרהיב ותמיכה רב-לשונית שגורמים לכל משתמש להרגיש מיוחד.',
                 aboutTeamText: 'הצוות שלנו הוא שילוב נדיר של גאוני טכנולוגיה, אמני סאונד וחולמי עתיד, כולם מחויבים להפוך את JourneySync למהפכה הבאה בעולם התוכן הדיגיטלי. אנחנו לא סתם אפליקציה - אנחנו הכרטיס שלך להפוך כל נסיעה ליצירת מופת.',
@@ -435,10 +407,6 @@
                 btn.classList.add('active');
                 selectedContentType = btn.dataset.type;
             });
-        });
-
-        sourceSelect.addEventListener('change', (e) => {
-            selectedSource = e.target.value;
         });
 
         languageSelect.addEventListener('change', (e) => {
@@ -458,24 +426,26 @@
                 durationInput.value = Math.floor(Math.random() * 60) + 10;
                 wazeBtn.classList.remove('loading');
                 wazeBtn.disabled = false;
-                showToast(currentLanguage === 'he' ? 'משך הנסיעה נטען מ-Waze (בהתקדמות)' : 'Travel duration loaded from Waze (in progress)');
-            }, 2000);
+                showToast(currentLanguage === 'he' ? 'משך הנסיעה נטען מ-Waze' : 'Travel duration loaded from Waze');
+            }, 1500);
         });
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            submitBtn.querySelector('.spinner').style.display = 'inline-block';
             setTimeout(() => {
                 generatePlaylist();
-                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                submitBtn.querySelector('.spinner').style.display = 'none';
             }, 1000);
         });
 
-        document.getElementById('savePlaylistBtn').addEventListener('click', () => {
+        savePlaylistBtn.addEventListener('click', () => {
             showToast(currentLanguage === 'he' ? 'הפלייליסט נשמר בהצלחה' : 'Playlist saved successfully');
         });
 
-        document.getElementById('shareBtn').addEventListener('click', () => {
+        shareBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(window.location.href);
             showToast(currentLanguage === 'he' ? 'קישור שותף ללוח' : 'Link copied to clipboard');
         });
@@ -513,8 +483,6 @@
             document.getElementById('shareText').textContent = t.shareText;
             homeBtn.textContent = t.homeBtn;
             aboutBtn.textContent = t.aboutBtn;
-
-            // Update About Section
             document.getElementById('aboutTitle').textContent = t.aboutTitle;
             document.getElementById('aboutSubtitle').textContent = t.aboutSubtitle;
             document.getElementById('aboutVisionTitle').textContent = t.aboutVisionTitle;
@@ -528,7 +496,6 @@
             document.getElementById('aboutTeamText').textContent = t.aboutTeamText;
             document.getElementById('investorBtnText').textContent = t.investorBtnText;
 
-            // Apply RTL for Hebrew
             if (currentLanguage === 'he') {
                 mainContainer.classList.add('rtl');
                 header.classList.add('rtl');
@@ -547,7 +514,10 @@
         function generatePlaylist() {
             const duration = parseInt(durationInput.value);
             const preference = preferenceSelect.value;
-            const content = contentDatabase[selectedSource].filter(v => v.type === selectedContentType && (preference === 'general' || v.preference === preference));
+            const content = contentDatabase.filter(v => 
+                v.type === selectedContentType && 
+                (preference === 'general' || v.preference === preference)
+            );
             const selectedContent = selectExactDuration(content, duration);
             displayResults(selectedContent);
         }
@@ -557,34 +527,32 @@
             const result = [];
             const shuffled = [...content].sort(() => 0.5 - Math.random());
             for (const item of shuffled) {
-                if (total < target) {
+                if (total + item.duration <= target + 1) { // Allow 1 minute buffer
                     result.push(item);
                     total += item.duration;
                 }
-                if (total >= target) break;
-            }
-            while (total > target && result.length > 0) {
-                total -= result.pop().duration;
+                if (total >= target - 1) break; // Stop within 1 minute of target
             }
             return result;
         }
 
         function displayResults(content) {
             resultsContainer.innerHTML = '';
-            players.forEach(player => player.destroy()); // Clean up previous players
+            players.forEach(player => player.destroy());
             players = [];
+            
+            if (content.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-center">No content found matching your criteria.</p>';
+                results.style.display = 'block';
+                return;
+            }
+
             content.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'col';
-                let playerHTML = '';
-                if (selectedSource === 'youtube') {
-                    playerHTML = `<div class="player-container" id="player-${index}"></div>`;
-                } else {
-                    playerHTML = `<audio class="audio-player" controls><source src="${item.id}" type="audio/mpeg"></audio>`;
-                }
                 card.innerHTML = `
                     <div class="card result-card">
-                        ${playerHTML}
+                        <div class="player-container" id="player-${index}"></div>
                         <div class="card-body">
                             <h5 class="card-title">${item.title}</h5>
                             <span class="badge bg-primary">${item.duration} ${currentLanguage === 'he' ? 'דקות' : 'min'}</span>
@@ -592,18 +560,22 @@
                     </div>
                 `;
                 resultsContainer.appendChild(card);
-                if (selectedSource === 'youtube') {
-                    const player = new YT.Player(`player-${index}`, {
-                        height: '200',
-                        width: '100%',
-                        videoId: item.id,
-                        playerVars: { 'autoplay': 0, 'controls': 1, 'rel': 0, 'showinfo': 0 },
-                        events: {
-                            'onError': (e) => console.log(`Error with video ${item.id}: ${e.data}`)
-                        }
-                    });
-                    players.push(player);
-                }
+
+                const player = new YT.Player(`player-${index}`, {
+                    height: '200',
+                    width: '100%',
+                    videoId: item.id,
+                    playerVars: { 
+                        'autoplay': 0, 
+                        'controls': 1, 
+                        'rel': 0, 
+                        'showinfo': 0 
+                    },
+                    events: {
+                        'onError': (e) => console.log(`Error with video ${item.id}: ${e.data}`)
+                    }
+                });
+                players.push(player);
             });
             results.style.display = 'block';
         }
